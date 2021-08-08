@@ -5,7 +5,7 @@ import { app } from '../www';
 import path from 'path';
 import { User } from '../sqlz/models/user.models';
 
-const read = JSON.parse(
+export const read = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'requirements.txt'), {
     encoding: 'utf-8',
     flag: 'r',

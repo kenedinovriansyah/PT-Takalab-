@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config.database';
+import { Category } from './category.models';
 
 interface UserAttributes {
   id?: string;
@@ -25,6 +26,12 @@ export class User
   public password!: string;
   public readonly createAt!: Date;
   public readonly updateAt!: Date;
+
+  public readonly category?: Category[];
+
+  public static associations: {
+    category: Association<User, Category>;
+  };
 }
 
 User.init(

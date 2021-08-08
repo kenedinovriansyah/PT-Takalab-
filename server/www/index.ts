@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { port, __test__ } from '../internal';
 import { UserControllers } from '../routes/user.controllers';
 import { sequelize } from '../sqlz/config.database';
+import { CategoryControllers } from '../routes/category.controllers';
 
 class App {
   app: express.Application = express();
@@ -31,7 +32,7 @@ class App {
     this.app.use(
       createExpressServer({
         routePrefix: '/api/v1/',
-        controllers: [UserControllers],
+        controllers: [UserControllers, CategoryControllers],
         authorizationChecker: function (action: Action, roles: any[]) {
           const check =
             action.request.headers['authorization'].split('Bearer ')[1];
