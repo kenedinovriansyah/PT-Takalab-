@@ -11,6 +11,7 @@ import {
 } from 'routing-controllers';
 import { v4 } from 'uuid';
 import { Category } from '../sqlz/models/category.models';
+import { CategoryInclude, CategoryQuery } from '../sqlz/query/category.query';
 
 @Controller()
 @UseAfter(compression())
@@ -26,7 +27,7 @@ export class CategoryControllers {
     const _ = await Category.create({
       name: req.body.name,
       id: v4(),
-      UserId: user.user.id,
+      fk_user: user.user.id,
     });
     return res.status(201).json({
       message: 'Category has been created',
@@ -50,21 +51,25 @@ export class CategoryControllers {
 
   @Get('category/')
   public async all(@Req() req: Request, @Res() res: Response) {
-    return res.status(200).json(await Category.findAll());
+    return res.status(200).json(
+      await CategoryQuery.findAll({
+        include: CategoryInclude,
+      })
+    );
   }
 
   @Get('category/:id/')
   public async getOne(@Req() req: Request, @Res() res: Response) {
-    const _ = await Category.findOne({
+    const _ = await CategoryQuery.findOne({
       where: {
         id: req.params.id,
       },
+      include: CategoryInclude,
     }).catch((err) => {
       return res.status(400).json({
         message: err,
       });
     });
-    console.log(_);
     return res.status(200).json(_);
   }
 }

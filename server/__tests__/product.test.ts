@@ -22,6 +22,7 @@ describe('Product tests', () => {
           .field('stock', faker.random.number(100))
           .field('max_stock', faker.random.number(100))
           .field('sku', faker.name.title())
+          .field('category', _.dataValues.id)
           .expect(201)
           .then(async (res) => {
             expect(res.status).toEqual(201);

@@ -1,4 +1,4 @@
-import { Association, DataTypes, Model } from 'sequelize';
+import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config.database';
 import { Product } from './product.models';
 import { User } from './user.models';
@@ -6,24 +6,30 @@ import { User } from './user.models';
 interface CategoryAttributes {
   id: string;
   name: string;
-  UserId?: string;
   createAt?: Date;
   updateAt?: Date;
+  fk_user?: string;
 }
 
+interface CategoryCreationAttributes
+  extends Optional<CategoryAttributes, 'id'> {}
+
 export class Category
-  extends Model<CategoryAttributes>
+  extends Model<CategoryAttributes, CategoryCreationAttributes>
   implements CategoryAttributes
 {
   public id: string;
   public name: string;
-  public UserId!: string;
+  public fk_user!: string;
   public readonly createAt!: Date;
   public readonly updateAt!: Date;
 
   public readonly product?: Product[];
+  public readonly UserId?: User;
+
   public static associations: {
     product: Association<Category, Product>;
+    UserId: Association<Category, User>;
   };
 }
 
@@ -39,13 +45,18 @@ Category.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    fk_user: {
+      type: DataTypes.UUIDV4,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'cascade',
+    },
   },
   {
     sequelize: sequelize,
     tableName: 'category',
   }
 );
-
-Category.belongsTo(User, {
-  targetKey: 'id',
-});

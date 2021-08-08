@@ -59,8 +59,8 @@ export class ProductControllers {
     const _ = await Product.create({
       ...body,
       id: v4(),
-      UserId: user.user.id,
-      CategoryId: body.category,
+      fk_user: user.user.id,
+      fk_category: body.category,
     }).catch((err) => {
       return res.status(400).json({
         message: err,

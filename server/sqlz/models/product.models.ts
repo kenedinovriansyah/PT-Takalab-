@@ -15,6 +15,8 @@ interface ProductAttributes {
   picture: any;
   createAt?: Date;
   updateAt?: Date;
+  fk_category?: string;
+  fk_user?: string;
 }
 
 export class Product
@@ -30,6 +32,8 @@ export class Product
   public max_stock: number;
   public sku: string;
   public picture: string;
+  public fk_category!: string;
+  public fk_user!: string;
   public readonly createAt!: Date;
   public readonly updateAt!: Date;
 }
@@ -74,16 +78,27 @@ Product.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    fk_user: {
+      type: DataTypes.UUIDV4,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'cascade',
+    },
+    fk_category: {
+      type: DataTypes.UUIDV4,
+      allowNull: false,
+      references: {
+        model: Category,
+        key: 'id',
+      },
+      onDelete: 'cascade',
+    },
   },
   {
     sequelize: sequelize,
     tableName: 'product',
   }
 );
-
-Product.belongsTo(User, {
-  targetKey: 'id',
-});
-Product.belongsTo(Category, {
-  targetKey: 'id',
-});
