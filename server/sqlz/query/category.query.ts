@@ -20,6 +20,7 @@ const include: Includeable[] = [
     as: 'author',
     required: false,
     attributes: [
+      'id',
       'username',
       'first_name',
       'last_name',

@@ -18,6 +18,7 @@ import path from 'path';
 import { Product } from '../sqlz/models/product.models';
 import { v4 } from 'uuid';
 import compression from 'compression';
+import { ProductInclude } from '../sqlz/query/product.query';
 
 export class Multer_ {
   constructor() {}
@@ -108,7 +109,11 @@ export class ProductControllers {
 
   @Get()
   public async all(@Req() req: Request, @Res() res: Response) {
-    return res.status(200).json(await Product.findAll());
+    return res.status(200).json(
+      await Product.findAll({
+        include: ProductInclude,
+      })
+    );
   }
 
   @Get(':id/')
@@ -116,6 +121,10 @@ export class ProductControllers {
     const _ = await Product.findOne({
       where: {
         id: req.params.id,
+      },
+      include: ProductInclude,
+      attributes: {
+        exclude: ['fk_user', 'fk_category'],
       },
     }).catch((err) => {
       return res.status(400).json({

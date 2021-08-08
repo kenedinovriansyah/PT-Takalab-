@@ -1,3 +1,4 @@
+import { Includeable } from 'sequelize/types';
 import { Category } from '../models/category.models';
 import { Product } from '../models/product.models';
 import { User } from '../models/user.models';
@@ -12,4 +13,28 @@ Product.belongsTo(User, {
   foreignKey: 'fk_user',
 });
 
-export { Product as ProductQuery };
+const include: Includeable[] = [
+  {
+    model: Category,
+    as: 'category',
+    required: false,
+    attributes: {
+      exclude: ['fk_user'],
+    },
+  },
+  {
+    model: User,
+    as: 'author',
+    required: false,
+    attributes: [
+      'id',
+      'username',
+      'first_name',
+      'last_name',
+      'createdAt',
+      'updatedAt',
+    ],
+  },
+];
+
+export { Product as ProductQuery, include as ProductInclude };
