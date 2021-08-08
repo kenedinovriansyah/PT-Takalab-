@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["es5", "es6", "dom", "esnext.asynciterable"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": false
+  },
+  "include": ["server/**/*.ts", "server/**/*.test.ts"],
+  "exclude": ["node_modules"]
+}

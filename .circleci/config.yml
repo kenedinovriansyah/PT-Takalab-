@@ -1,0 +1,23 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@3.0.0
+
+jobs:
+  pt_takalab:
+    executor:
+      name: node/default
+      tag: '13.14'
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          override-ci-command: npm install --save
+      - run:
+          command: npm run c:test
+          name: run npm circleci unittest
+
+workflows:
+  test_my_app:
+    jobs:
+      - pt_takalab
