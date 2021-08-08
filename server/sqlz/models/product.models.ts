@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config.database';
 import { Category } from './category.models';
 import { User } from './user.models';
+import currencyFormatter from 'currency-formatter';
 
 interface ProductAttributes {
   id: string;
@@ -118,6 +119,14 @@ Price.init(
     currency: {
       type: DataTypes.STRING,
       defaultValue: 'Rp.0',
+      get() {
+        const cost = this.getDataValue('currency');
+        if (cost.split('Rp')[0]) {
+          return cost;
+        } else {
+          return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
+        }
+      },
     },
     fk_product: {
       type: DataTypes.UUIDV4,
@@ -157,6 +166,14 @@ SalesPrice.init(
     currency: {
       type: DataTypes.STRING,
       defaultValue: 'Rp.0',
+      get() {
+        const cost = this.getDataValue('currency');
+        if (cost.split('Rp')[0]) {
+          return cost;
+        } else {
+          return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
+        }
+      },
     },
     fk_product: {
       type: DataTypes.UUIDV4,

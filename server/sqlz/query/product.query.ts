@@ -30,6 +30,7 @@ const include: Includeable[] = [
     model: Price,
     as: 'price',
     required: false,
+    attributes: ['cost', 'currency'],
     where: {
       fk_product: Sequelize.col('product.id'),
     },
@@ -38,6 +39,7 @@ const include: Includeable[] = [
     model: SalesPrice,
     as: 'sales_price',
     required: false,
+    attributes: ['cost', 'currency'],
     where: {
       fk_product: Sequelize.col('product.id'),
     },
