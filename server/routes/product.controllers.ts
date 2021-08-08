@@ -20,6 +20,7 @@ import compression from 'compression';
 import { ProductInclude } from '../sqlz/query/product.query';
 import { Upload } from '../types/interface';
 import { productService } from './service/product.service';
+import { OpenAPI } from 'routing-controllers-openapi';
 
 export class Multer_ {
   constructor() {}
@@ -80,6 +81,14 @@ export class ProductControllers {
   }
 
   @Get()
+  @OpenAPI({
+    description: 'List all avaiable product',
+    responses: {
+      '400': {
+        description: 'Bad Request',
+      },
+    },
+  })
   public async all(@Req() req: Request, @Res() res: Response) {
     return res.status(200).json(
       await Product.findAll({
