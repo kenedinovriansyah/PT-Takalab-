@@ -7,8 +7,6 @@ interface ProductAttributes {
   id: string;
   name: string;
   desc: string;
-  price: string;
-  sales_price: string;
   stock: number;
   max_stock: number;
   sku: string;
@@ -19,15 +17,11 @@ interface ProductAttributes {
   fk_user?: string;
 }
 
-export class Product
-  extends Model<ProductAttributes>
-  implements ProductAttributes
-{
+class Product extends Model<ProductAttributes> implements ProductAttributes {
   public id: string;
   public name: string;
   public desc: string;
-  public price: string;
-  public sales_price: string;
+
   public stock: number;
   public max_stock: number;
   public sku: string;
@@ -51,14 +45,6 @@ Product.init(
       allowNull: false,
     },
     desc: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    sales_price: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -102,3 +88,87 @@ Product.init(
     tableName: 'product',
   }
 );
+
+interface CurrencyAttributes {
+  id: string;
+  cost: string;
+  currency: string;
+  fk_product?: string;
+}
+
+class Price extends Model<CurrencyAttributes> implements CurrencyAttributes {
+  public id: string;
+  public cost: string;
+  public currency: string;
+  public fk_product!: string;
+}
+
+Price.init(
+  {
+    id: {
+      type: DataTypes.UUIDV4,
+      primaryKey: true,
+      unique: true,
+      allowNull: false,
+    },
+    cost: {
+      type: DataTypes.DECIMAL(2, 8),
+      allowNull: false,
+    },
+    currency: {
+      type: DataTypes.STRING,
+      defaultValue: 'Rp.0',
+    },
+    fk_product: {
+      type: DataTypes.UUIDV4,
+      allowNull: false,
+      references: {
+        model: Product,
+        key: 'id',
+      },
+      onDelete: 'cascade',
+    },
+  },
+  { sequelize: sequelize, tableName: 'price' }
+);
+
+class SalesPrice
+  extends Model<CurrencyAttributes>
+  implements CurrencyAttributes
+{
+  public id: string;
+  public cost: string;
+  public currency: string;
+  public fk_product!: string;
+}
+
+SalesPrice.init(
+  {
+    id: {
+      type: DataTypes.UUIDV4,
+      primaryKey: true,
+      unique: true,
+      allowNull: false,
+    },
+    cost: {
+      type: DataTypes.DECIMAL(2, 8),
+      allowNull: false,
+    },
+    currency: {
+      type: DataTypes.STRING,
+      defaultValue: 'Rp.0',
+    },
+    fk_product: {
+      type: DataTypes.UUIDV4,
+      allowNull: false,
+      references: {
+        model: Product,
+        key: 'id',
+      },
+      onDelete: 'cascade',
+    },
+  },
+  { sequelize: sequelize, tableName: 'sales_price' }
+);
+
+export { Product, Price, SalesPrice };

@@ -1,6 +1,6 @@
-import { Includeable } from 'sequelize/types';
+import { Includeable, Sequelize } from 'sequelize';
 import { Category } from '../models/category.models';
-import { Product } from '../models/product.models';
+import { Price, Product, SalesPrice } from '../models/product.models';
 import { User } from '../models/user.models';
 
 Product.belongsTo(Category, {
@@ -13,7 +13,35 @@ Product.belongsTo(User, {
   foreignKey: 'fk_user',
 });
 
+Product.hasOne(Price, {
+  sourceKey: 'id',
+  as: 'price',
+  foreignKey: 'fk_product',
+});
+
+Product.hasOne(SalesPrice, {
+  sourceKey: 'id',
+  as: 'sales_price',
+  foreignKey: 'fk_product',
+});
+
 const include: Includeable[] = [
+  {
+    model: Price,
+    as: 'price',
+    required: false,
+    where: {
+      fk_product: Sequelize.col('product.id'),
+    },
+  },
+  {
+    model: SalesPrice,
+    as: 'sales_price',
+    required: false,
+    where: {
+      fk_product: Sequelize.col('product.id'),
+    },
+  },
   {
     model: Category,
     as: 'category',

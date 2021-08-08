@@ -15,7 +15,7 @@ import {
 var bodyParser = require('body-parser');
 import multer, { Multer, StorageEngine } from 'multer';
 import path from 'path';
-import { Product } from '../sqlz/models/product.models';
+import { Price, SalesPrice, Product } from '../sqlz/models/product.models';
 import { v4 } from 'uuid';
 import compression from 'compression';
 import { ProductInclude } from '../sqlz/query/product.query';
@@ -66,6 +66,18 @@ export class ProductControllers {
       return res.status(400).json({
         message: err,
       });
+    });
+    await Price.create({
+      id: v4(),
+      cost: body.price,
+      currency: body.price,
+      fk_product: _.get('id') as string,
+    });
+    await SalesPrice.create({
+      id: v4(),
+      cost: body.sales_price,
+      currency: body.sales_price,
+      fk_product: _.get('id') as string,
     });
     return res.status(201).json({
       message: 'Product has been created',
