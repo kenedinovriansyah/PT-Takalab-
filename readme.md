@@ -53,7 +53,7 @@
 ]
 ```
 
-- /api/v1/category/<id>/
+- /api/v1/category/:id/
 
 ```
 {
