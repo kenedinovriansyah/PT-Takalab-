@@ -9,9 +9,8 @@ import {
   Res,
   UseAfter,
 } from 'routing-controllers';
-import { v4 } from 'uuid';
-import { Category } from '../sqlz/models/category.models';
 import { CategoryInclude, CategoryQuery } from '../sqlz/query/category.query';
+import { categoryService } from './service/category.service';
 
 @Controller()
 @UseAfter(compression())
@@ -24,28 +23,17 @@ export class CategoryControllers {
     @Req() req: Request,
     @Res() res: Response
   ) {
-    const _ = await Category.create({
-      name: req.body.name,
-      id: v4(),
-      fk_user: user.user.id,
-    });
     return res.status(201).json({
       message: 'Category has been created',
-      data: _,
+      data: await categoryService.create(req, user),
     });
   }
 
   @Post('category/:id/')
   public async updated(@Req() req: Request, @Res() res: Response) {
-    const _ = await Category.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
-    _.name = req.body.name;
-    _.save();
     return res.status(200).json({
       message: 'Category has been updated',
+      data: await categoryService.updated(req),
     });
   }
 

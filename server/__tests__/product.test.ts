@@ -23,6 +23,10 @@ describe('Product tests', () => {
           .field('max_stock', faker.random.number(100))
           .field('sku', faker.name.title())
           .field('category', _.dataValues.id)
+          .attach(
+            'picture',
+            path.join(__dirname, 'shutterstockRF_713119015.jpeg')
+          )
           .expect(201)
           .then(async (res) => {
             expect(res.status).toEqual(201);
@@ -72,6 +76,10 @@ describe('Product tests', () => {
           .field('stock', faker.random.number(100))
           .field('max_stock', faker.random.number(100))
           .field('sku', faker.name.title())
+          .attach(
+            'picture',
+            path.join(__dirname, 'shutterstockRF_713119015.jpeg')
+          )
           .expect(200)
           .then((res) => {
             expect(res.status).toEqual(200);

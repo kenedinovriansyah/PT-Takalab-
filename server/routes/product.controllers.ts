@@ -15,10 +15,11 @@ import {
 var bodyParser = require('body-parser');
 import multer, { Multer, StorageEngine } from 'multer';
 import path from 'path';
-import { Price, SalesPrice, Product } from '../sqlz/models/product.models';
-import { v4 } from 'uuid';
+import { Product } from '../sqlz/models/product.models';
 import compression from 'compression';
 import { ProductInclude } from '../sqlz/query/product.query';
+import { Upload } from '../types/interface';
+import { productService } from './service/product.service';
 
 export class Multer_ {
   constructor() {}
@@ -52,36 +53,14 @@ export class ProductControllers {
     @UploadedFile('picture', {
       options: new Multer_().upload(),
     })
-    picture: any,
+    file: Upload,
     @CurrentUser() user: any,
     @Body() body: any,
     @Res() res: Response
   ) {
-    const _ = await Product.create({
-      ...body,
-      id: v4(),
-      fk_user: user.user.id,
-      fk_category: body.category,
-    }).catch((err) => {
-      return res.status(400).json({
-        message: err,
-      });
-    });
-    await Price.create({
-      id: v4(),
-      cost: body.price,
-      currency: body.price,
-      fk_product: _.get('id') as string,
-    });
-    await SalesPrice.create({
-      id: v4(),
-      cost: body.sales_price,
-      currency: body.sales_price,
-      fk_product: _.get('id') as string,
-    });
     return res.status(201).json({
       message: 'Product has been created',
-      data: _,
+      data: await productService.create(body, user, file, res),
     });
   }
 
@@ -90,32 +69,13 @@ export class ProductControllers {
     @UploadedFile('picture', {
       options: new Multer_().upload(),
     })
-    picture: any,
+    file: any,
     @Req() req: Request,
     @Res() res: Response
   ) {
-    let _: any;
-    _ = await Product.findOne({
-      where: {
-        id: req.params.id,
-      },
-    }).catch((err) => {
-      return res.status(400).json({
-        message: err,
-      });
-    });
-    _.name = req.body.name;
-    _.desc = req.body.desc;
-    _.price = req.body.price;
-    _.sales_price = req.body.sales_price;
-    _.stock = req.body.stock;
-    _.max_stock = req.body.max_stock;
-    _.sku = req.body.sku;
-    _.save();
-
     return res.status(200).json({
       message: 'Product has been updated',
-      data: _,
+      data: await productService.update(file, req, res),
     });
   }
 

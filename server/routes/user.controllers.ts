@@ -14,6 +14,7 @@ import { v4 } from 'uuid';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import compression from 'compression';
+import { userService } from './service/user.service';
 
 @Controller()
 @UseAfter(compression())
@@ -81,23 +82,7 @@ export class UserControllers {
     @Req() req: Request,
     @Res() res: Response
   ) {
-    const _ = await User.findOne({
-      where: {
-        id: user.user.id,
-      },
-    });
-    if (!argon2.verify(_.password, req.body.old_password)) {
-      return res.status(400).json({
-        message: 'Password is wrong',
-      });
-    }
-    if (req.body.password !== req.body.password_confirmation) {
-      return res.status(400).json({
-        message: "Password don't match, please checek again",
-      });
-    }
-    _.password = await argon2.hash(req.body.password);
-    _.save();
+    userService.changePassword(user, req, res);
     return res.status(200).json({
       message: 'Password has been updated',
     });
@@ -110,18 +95,7 @@ export class UserControllers {
     @Req() req: Request,
     @Res() res: Response
   ) {
-    const _ = await User.findOne({
-      where: {
-        id: user.user.id,
-      },
-    });
-    if (!argon2.verify(_.password, req.body.password)) {
-      return res.status(400).json({
-        message: 'Password is wrong',
-      });
-    }
-    _.email = req.body.email;
-    _.save();
+    userService.changeEmail(user, req, res);
     return res.status(200).json({
       message: 'Email has been updated',
     });
