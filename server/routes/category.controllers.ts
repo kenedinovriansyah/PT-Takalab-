@@ -1,3 +1,4 @@
+import compression from 'compression';
 import { Request, Response } from 'express';
 import {
   Controller,
@@ -6,11 +7,13 @@ import {
   Post,
   Req,
   Res,
+  UseAfter,
 } from 'routing-controllers';
 import { v4 } from 'uuid';
 import { Category } from '../sqlz/models/category.models';
 
 @Controller()
+@UseAfter(compression())
 export class CategoryControllers {
   constructor() {}
 

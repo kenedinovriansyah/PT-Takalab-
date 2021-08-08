@@ -9,6 +9,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseAfter,
   UseBefore,
 } from 'routing-controllers';
 var bodyParser = require('body-parser');
@@ -16,6 +17,7 @@ import multer, { Multer, StorageEngine } from 'multer';
 import path from 'path';
 import { Product } from '../sqlz/models/product.models';
 import { v4 } from 'uuid';
+import compression from 'compression';
 
 export class Multer_ {
   constructor() {}
@@ -37,6 +39,7 @@ export class Multer_ {
 }
 
 @Controller('product/')
+@UseAfter(compression())
 @UseBefore(bodyParser.json())
 @UseBefore(bodyParser.urlencoded({ extended: false }))
 export class ProductControllers {

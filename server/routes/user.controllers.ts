@@ -7,13 +7,16 @@ import {
   Post,
   Req,
   Res,
+  UseAfter,
 } from 'routing-controllers';
 import { User } from '../sqlz/models/user.models';
 import { v4 } from 'uuid';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import compression from 'compression';
 
 @Controller()
+@UseAfter(compression())
 export class UserControllers {
   constructor() {}
 
