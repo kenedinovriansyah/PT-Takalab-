@@ -26,6 +26,7 @@ describe('Category tests', () => {
               count: read.count,
               token: read.token,
               category: count,
+              product: read.product,
             })
           );
         });

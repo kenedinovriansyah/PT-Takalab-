@@ -8,6 +8,7 @@ import { port, __test__ } from '../internal';
 import { UserControllers } from '../routes/user.controllers';
 import { sequelize } from '../sqlz/config.database';
 import { CategoryControllers } from '../routes/category.controllers';
+import { ProductControllers } from '../routes/product.controllers';
 
 class App {
   app: express.Application = express();
@@ -24,15 +25,11 @@ class App {
   public extensions() {
     this.app.use(cors());
     this.app.use(bodyparser.json());
-    this.app.use(
-      bodyparser.urlencoded({
-        extended: true,
-      })
-    );
+    this.app.use(bodyparser.urlencoded({ extended: false }));
     this.app.use(
       createExpressServer({
         routePrefix: '/api/v1/',
-        controllers: [UserControllers, CategoryControllers],
+        controllers: [UserControllers, CategoryControllers, ProductControllers],
         authorizationChecker: function (action: Action, roles: any[]) {
           const check =
             action.request.headers['authorization'].split('Bearer ')[1];
@@ -49,6 +46,7 @@ class App {
           }
           return null;
         },
+        classTransformer: true,
       })
     );
   }

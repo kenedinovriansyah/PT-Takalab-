@@ -7,6 +7,7 @@ fs.writeFileSync(
     count: 0,
     token: null,
     category: 0,
+    product: 0,
   })
 );
 

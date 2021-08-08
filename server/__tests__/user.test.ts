@@ -34,6 +34,7 @@ describe('User Tests', () => {
             count: count,
             token: read.token,
             category: read.category,
+            product: read.product,
           })
         );
       });
@@ -56,6 +57,7 @@ describe('User Tests', () => {
               count: read.count,
               token: res.body,
               category: read.category,
+              product: read.product,
             })
           );
         });
