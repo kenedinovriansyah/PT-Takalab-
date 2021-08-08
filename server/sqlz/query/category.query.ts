@@ -18,6 +18,7 @@ const include: Includeable[] = [
   {
     model: User,
     as: 'author',
+    required: false,
     attributes: [
       'username',
       'first_name',
@@ -29,6 +30,7 @@ const include: Includeable[] = [
   {
     model: ProductQuery,
     as: 'product',
+    required: false,
     where: {
       fk_category: Sequelize.col('category.id'),
     },
@@ -36,6 +38,7 @@ const include: Includeable[] = [
       {
         model: User,
         as: 'author',
+        required: false,
         attributes: [
           'username',
           'first_name',
@@ -47,6 +50,7 @@ const include: Includeable[] = [
       {
         model: Category,
         as: 'category',
+        required: false,
         attributes: ['id', 'name', 'createdAt', 'updatedAt'],
       },
     ],
