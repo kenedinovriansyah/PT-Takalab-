@@ -115,17 +115,14 @@ Price.init(
     cost: {
       type: DataTypes.DECIMAL(2, 8),
       allowNull: false,
+      defaultValue: 0,
     },
     currency: {
       type: DataTypes.STRING,
       defaultValue: 'Rp.0',
       get() {
-        const cost = this.getDataValue('currency');
-        if (cost.split('Rp')[0]) {
-          return cost;
-        } else {
-          return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
-        }
+        const cost = this.getDataValue('cost');
+        return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
       },
     },
     fk_product: {
@@ -162,17 +159,14 @@ SalesPrice.init(
     cost: {
       type: DataTypes.DECIMAL(2, 8),
       allowNull: false,
+      defaultValue: 0,
     },
     currency: {
       type: DataTypes.STRING,
       defaultValue: 'Rp.0',
       get() {
-        const cost = this.getDataValue('currency');
-        if (cost.split('Rp')[0]) {
-          return cost;
-        } else {
-          return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
-        }
+        const cost = this.getDataValue('cost');
+        return currencyFormatter.format(parseInt(cost), { locale: 'id-ID' });
       },
     },
     fk_product: {
