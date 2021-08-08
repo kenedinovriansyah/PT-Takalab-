@@ -10,8 +10,6 @@ import {
   UseAfter,
 } from 'routing-controllers';
 import { User } from '../sqlz/models/user.models';
-import { v4 } from 'uuid';
-import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import compression from 'compression';
 import { userService } from './service/user.service';
@@ -50,26 +48,16 @@ export class UserControllers {
 
   @Post('user/')
   public async login(@Req() req: Request, @Res() res: Response) {
-    const _ = await User.findOne({
-      where: {
-        username: req.body.username,
-      },
-    });
-    if (!argon2.verify(_.password, req.body.password)) {
-      return res.status(400).json({
-        message: 'Inccorect username or password',
-      });
-    }
-    return res.status(200).json(jwt.sign({ user: _ }, 'Hello Worlds'));
+    return res
+      .status(200)
+      .json(
+        jwt.sign({ user: await userService.login(req, res) }, 'Hello Worlds')
+      );
   }
 
   @Post('user/created/')
   public async created(@Req() req: Request, @Res() res: Response) {
-    await User.create({
-      ...req.body,
-      id: v4(),
-      password: await argon2.hash(req.body.password),
-    });
+    userService.create(req, res);
     return res.status(201).json({
       message: 'Accounts has been created',
     });

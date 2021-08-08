@@ -20,6 +20,7 @@ describe('User Tests', () => {
         username: faker.internet.userName(),
         email: faker.internet.email(),
         password: 'Password',
+        password_confirmation: 'Password',
       })
       .expect(201)
       .then(async (res) => {
